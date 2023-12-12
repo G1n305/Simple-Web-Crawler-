@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>URL Crawler</title>
+    <!-- Link the external CSS file -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>ĐẠI HỌC QUỐC GIA THÀNH PHỐ HỒ CHÍ MINH</h1>
+        <h1>ĐẠI HỌC BÁCH KHOA THÀNH PHỐ CHÍ MINH</h1>
+        <h2>KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH</h2>
+        <img src="Images/Logo-DH-Bach-Khoa-HCMUT.webp" alt="BKU_Logo" class="centered-image">
+
+        <h3>MÔN HỌC: MẬT MÃ VÀ AN NINH MẠNG</h3>
+        <h3>BÀI TẬP LỚN: CRAWL DATA FROM A WEBSITE</h3>
+        <h1>URL Crawler</h1>
+        <input type="text" id="urlInput" placeholder="Enter URL">
+        <input type="text" id="folderPathInput" placeholder="Enter Folder Path with the / between folder">
+        <button onclick="Crawl_Image()">Crawl_Image <div id="loader" class="loader" style="display: none;"></div></button>
+        <button onclick="Crawl_Audio()">Crawl_Audio <div id="loader" class="loader" style="display: none;"></div></button>
+        <button onclick="Crawl_Video()">Crawl_Video <div id="loader" class="loader" style="display: none;"></div></button>
+        <div id="resultContainer"></div>
+        <h5>Lưu ý: Trang web này chỉ sử dụng cho mục đích học thuật</h5>
+
+        <h4>HƯỚNG DẪN SỬ DỤNG WEBSITE</h4>
+        <div class="guideline">
+            1. Truy cập website bất kỳ, copy đường link "URL" của website đó trên thanh địa chỉ <br>
+            2. Dán đường link vào phần "Enter URL" <br>
+            3. Nhấn "Crawl" để tiến hành quá trình <br>
+        </div>
+    </div>
+
+    <script>
+        function Crawl_Image(){
+            sendCrawlRequest("crawl_images.php");
+        }
+        function Crawl_Audio(){
+            sendCrawlRequest("crawl_audio.php");
+        }
+        function Crawl_Video(){
+            sendCrawlRequest("crawl_video.php");
+        }
+        function sendCrawlRequest(scriptName) {
+                // Hiển thị ảnh động
+            document.getElementById('loader').style.display = 'inline-block';
+
+            var url = document.getElementById('urlInput').value;
+            var folderPath = document.getElementById('folderPathInput').value;
+            var resultContainer = document.getElementById('resultContainer');
+            //resultContainer.innerHTML = `<p>Crawling data from: ${url}</p>`;
+            // You can add more logic to handle crawling data
+            //send the url to the PHP script using AJAX
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState == 4) {
+                    // Ẩn ảnh động khi tải xong
+                    document.getElementById('loader').style.display = 'none';
+                    if (this.status == 200) {
+                        resultContainer.innerHTML = this.responseText;
+                    }
+                }
+            };
+            xhr.open("GET", scriptName + "?url=" + encodeURIComponent(url) + "&folderPath=" + encodeURIComponent(folderPath), true);
+            xhr.send();
+        }
+    </script>
+
+</body>
+
+</html>
